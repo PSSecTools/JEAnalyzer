@@ -1,0 +1,11 @@
+﻿TOPIC
+	about_JEAnalyzer
+	
+SHORT DESCRIPTION
+	Explains how to use the JEAnalyzer powershell module
+	
+LONG DESCRIPTION
+	<Insert Content here>
+
+KEYWORDS
+	JEAnalyzer

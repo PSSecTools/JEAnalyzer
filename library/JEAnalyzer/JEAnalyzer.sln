@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00A3AA73-E887-4EE6-AEAE-231AC4196FCB}") = "JEAnalyzer", "JEAnalyzer\JEAnalyzer.csproj", "{1437A71B-3DE4-4D26-ACDD-39AF521E9DB9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1437A71B-3DE4-4D26-ACDD-39AF521E9DB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1437A71B-3DE4-4D26-ACDD-39AF521E9DB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1437A71B-3DE4-4D26-ACDD-39AF521E9DB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1437A71B-3DE4-4D26-ACDD-39AF521E9DB9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC4A7F8E-605B-4308-A10A-D04C1D305216}
+	EndGlobalSection
+EndGlobal

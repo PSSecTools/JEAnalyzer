@@ -1,0 +1,23 @@
+﻿
+# ignore the settings folder and files for VSCode and PSS
+.vscode/*
+*.psproj
+*.psprojs
+*TempPoint*
+
+# Ignore staging info from Visual Studio
+library/JEAnalyzer/.vs/*
+library/JEAnalyzer/JEAnalyzer/bin/*
+library/JEAnalyzer/JEAnalyzer/obj/*
+
+# ignore PowerShell Studio MetaData
+JEAnalyzer/JEAnalyzer.psproj
+JEAnalyzer/JEAnalyzer.psproj.bak
+JEAnalyzer/JEAnalyzer.psprojs
+JEAnalyzer/JEAnalyzer.psproj
+
+# ignore the TestResults
+TestResults/*
+
+# ignore the publishing Directory
+publish/*

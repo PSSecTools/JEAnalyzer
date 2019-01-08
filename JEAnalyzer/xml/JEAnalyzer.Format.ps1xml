@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Configuration>
+    <ViewDefinitions>
+        <!-- JEAnalyzer.CommandInfo -->
+        <View>
+            <Name>JEAnalyzer.CommandInfo</Name>
+            <ViewSelectedBy>
+                <TypeName>JEAnalyzer.CommandInfo</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Alignment>Right</Alignment>
+                    </TableColumnHeader>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>IsDangerous</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>CommandName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Module</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>CommandType</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
