@@ -18,7 +18,7 @@
 	Copyright = 'Copyright (c) 2018 Miriam Wiesner'
 	
 	# Description of the functionality provided by this module
-	Description = 'Simplifies the implementation of Just Enough Administration by providing functions to convert Code, ScripBlocks or Scripts into JEA role capability files.'
+	Description = 'Simplifies the implementation of Just Enough Admini1stration by providing functions to convert Code, ScripBlocks or Scripts into JEA role capability files.'
 	
 	# Minimum version of the Windows PowerShell engine required by this module
 	PowerShellVersion = '5.0'
@@ -26,7 +26,7 @@
 	# Modules that must be imported into the global environment prior to importing
 	# this module
 	RequiredModules = @(
-		@{ ModuleName = 'PSFramework'; ModuleVersion = '0.9.25.113' }
+		@{ ModuleName = 'PSFramework'; ModuleVersion = '0.10.30.165' }
 	)
 	
 	# Assemblies that must be loaded prior to importing this module
@@ -41,6 +41,7 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Export-JeaRoleCapFile'
+		'Get-JeaConfiguration'
 		'Read-JeaScriptblock'
 		'Read-JeaScriptFile'
 	)
