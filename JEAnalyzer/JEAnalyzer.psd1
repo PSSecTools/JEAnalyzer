@@ -3,7 +3,7 @@
 	ModuleToProcess = 'JEAnalyzer.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.0.0.0'
+	ModuleVersion = '1.0.0.1'
 	
 	# ID used to uniquely identify this module
 	GUID = '346caa76-534a-4651-88f5-359e85cd71c0'
