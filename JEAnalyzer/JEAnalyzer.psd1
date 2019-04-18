@@ -18,7 +18,7 @@
 	Copyright = 'Copyright (c) 2018 Miriam Wiesner'
 	
 	# Description of the functionality provided by this module
-	Description = 'Simplifies the implementation of Just Enough Admini1stration by providing functions to convert Code, ScripBlocks or Scripts into JEA role capability files.'
+	Description = 'Simplifies the implementation of Just Enough Administration by providing functions to convert Code, ScripBlocks or Scripts into JEA role capability files.'
 	
 	# Minimum version of the Windows PowerShell engine required by this module
 	PowerShellVersion = '5.0'
