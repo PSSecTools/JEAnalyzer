@@ -11,7 +11,7 @@
 		The command to add information for.
 	
 	.PARAMETER File
-		The file the command was read from
+		The file the command was read from.
 	
 	.EXAMPLE
 		PS C:\> Get-CommandMetaData -CommandName 'Get-Help'
@@ -30,7 +30,7 @@
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
+		Write-PSFMessage -Level InternalComment -String 'General.BoundParameters' -StringValues ($PSBoundParameters.Keys -join ", ") -Tag 'debug', 'start', 'param'
 		
 		if (-not $script:allcommands)
 		{
@@ -44,21 +44,17 @@
 		foreach ($command in $CommandName)
 		{
 			Write-PSFMessage -Level Verbose -Message "Adding meta information for: $($command)"
-			$commandObject = [pscustomobject]@{
-				PSTypeName    = 'JEAnalyzer.CommandInfo'
+			$commandObject = New-Object -TypeName 'JEAnalyzer.CommandInfo' -Property @{
 				CommandName   = $command
 				CommandObject = $script:allcommands | Where-Object Name -EQ $command
 				File		  = $File
 			}
 			$commandObject | Select-PSFObject -KeepInputObject -ScriptProperty @{
-				IsAlias	    = { $this.CommandObject.CommandType -like 'Alias' }
-				CommandType = { $this.CommandObject.CommandType }
 				IsDangerous	= {
 					if ($this.CommandObject.Parameters.Values | Where-Object { $_.ParameterType.FullName -eq 'System.Management.Automation.ScriptBlock' }) { return $true }
 					(& (Get-Module JEAnalyzer) { $script:dangerousCommands }) -contains $this.CommandName
 				}
-				Module	    = { $this.CommandObject.ModuleName }
-			} -TypeName 'JEAnalyzer.CommandInfo'
+			}
 		}
 	}
 }

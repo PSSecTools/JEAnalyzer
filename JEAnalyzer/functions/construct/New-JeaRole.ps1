@@ -23,9 +23,12 @@
 		If left empty, only remote management users will be able to connect to this endpoint.
 		Either use AD Objects (such as the output of Get-ADGroup) or offer netbios-domain-qualified names as string.
 	
-	.PARAMETER Capabilities
+	.PARAMETER Capability
 		The capabilities a role is supposed to have.
 		This can be any kind of object - the name of a command, the output of Get-Command, path to a scriptfile or the output of any of the processing commands JEAnalyzer possesses (such as Read-JeaScriptFile).
+	
+	.PARAMETER Module
+		A JEA module to which to add the role.
 	
 	.EXAMPLE
 		PS C:\> New-JeaRole -Name 'Test'
@@ -46,32 +49,35 @@
 		Finally, it adds the new role to the JEA Module object stored in $module.
 #>
 	[CmdletBinding()]
-	Param (
+	param (
+		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
 		
+		[Parameter(Mandatory = $true)]
 		$Identity,
 		
 		[Parameter(ValueFromPipeline = $true)]
-		$Capabilities
+		$Capability,
+		
+		[JEAnalyzer.Module]
+		$Module
 	)
 	
 	begin
 	{
-		Write-PSFMessage ($script:strings['New-JeaRole.Creating'] -f $Name)
-		$role = [PSCustomObject]@{
-			PSTypeName = 'JEAnalyzer.Role'
-			Name	   = $Name
-			Identity   = $Identity
-			Capability = @()
-		}
+		Write-PSFMessage -String 'New-JeaRole.Creating' -StringValues $Name
+		$role = New-Object -TypeName 'JEAnalyzer.Role' -ArgumentList $Name, $Identity
 	}
 	process
 	{
-		$role.Capability += $Capabilities | ConvertTo-Capability
+		$Capability | ConvertTo-JeaCapability | ForEach-Object {
+			$null = $role.CommandCapability[$_.Name] = $_
+		}
 	}
 	end
 	{
-		$role
+		if ($Module) { $Module.Roles[$role.Name] = $role }
+		else { $role }
 	}
 }

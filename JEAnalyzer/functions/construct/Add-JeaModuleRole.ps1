@@ -28,11 +28,13 @@
 		Adds the roles stored in $roles to the module stored in $module
 #>
 	[CmdletBinding()]
-	Param (
-		[PsfValidateScript('JEAnalyzer.ValidateType.Module', ErrorString = 'JEAnalyzer.ValidateType.Module')]
+	param (
+		[Parameter(Mandatory = $true, Position = 0)]
+		[JEAnalyzer.Module]
 		$Module,
 		
-		[PsfValidateScript('JEAnalyzer.ValidateType.Roles', ErrorString = 'JEAnalyzer.ValidateType.Roles')]
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+		[JEAnalyzer.Role[]]
 		$Role,
 		
 		[switch]
@@ -48,9 +50,9 @@
 		{
 			if ($Module.Roles.ContainsKey($roleItem.Name) -and -not $Force)
 			{
-				Stop-PSFFunction -Message ($script:strings['Add-JeaModuleRole.RolePresent'] -f $roleItem.Name, $Module.Name) -EnableException $EnableException -Continue -Cmdlet $PSCmdlet -Target $Role
+				Stop-PSFFunction -String 'Add-JeaModuleRole.RolePresent' -StringValues $roleItem.Name, $Module.Name -EnableException $EnableException -Continue -Cmdlet $PSCmdlet -Target $Role
 			}
-			Write-PSFMessage -Message ($script:strings['Add-JeaModuleRole.AddingRole'] -f $roleItem.Name, $Module.Name) -Target $Role
+			Write-PSFMessage -String 'Add-JeaModuleRole.AddingRole' -StringValues $roleItem.Name, $Module.Name -Target $Role
 			$Module.Roles[$roleItem.Name] = $roleItem
 		}
 	}
