@@ -19,7 +19,7 @@ namespace JEAnalyzer
         /// <summary>
         /// The identity (user/group) being granted permission to the role.
         /// </summary>
-        public string Identity;
+        public string[] Identity;
 
         /// <summary>
         /// List of command capabilities
@@ -39,7 +39,7 @@ namespace JEAnalyzer
         /// </summary>
         /// <param name="Name">The name of the role</param>
         /// <param name="Identity">The Identity to be granted access to the role.</param>
-        public Role(string Name, string Identity)
+        public Role(string Name, string[] Identity)
         {
             this.Name = Name;
             this.Identity = Identity;

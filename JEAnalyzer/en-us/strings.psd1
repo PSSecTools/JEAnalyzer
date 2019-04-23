@@ -26,6 +26,11 @@
 	'Export-JeaModule.Role.VisibleFunction'    = '[Role: {0}] Adding visible Function: {1}{2}'
 	'Export-JeaModule.File.Create'			   = 'Creating File: {0}'
 	
+	# Command Import-JeaScriptFile
+	'Import-JeaScriptFile.ProcessingInput'	   = 'Processing file for import: {0}'
+	'Import-JeaScriptFile.ParsingError'	       = 'Parsing error for file: {0}'
+	'Import-JeaScriptFile.UnknownError'	       = 'Unknown error when processing file: {0}'
+	
 	# Command New-JeaModule
 	'New-JeaModule.Creating'				   = 'Creating JEA Module object for: {0} (v{1})'
 	

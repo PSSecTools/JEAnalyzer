@@ -2,10 +2,63 @@
 	about_JEAnalyzer
 	
 SHORT DESCRIPTION
-	Explains how to use the JEAnalyzer powershell module
+	The JEAnalyzer Module is designed to analyze code, generate JEA Modules
+	and manage JEA Deployments.
+	It is your all-in-one go-to solution to your JEA deployments.
 	
 LONG DESCRIPTION
-	<Insert Content here>
+	# Last updated for version 1.1.0
+	
+	 #-----------------------------------------------------------------------# 
+	 #                                 Index                                 # 
+	 #-----------------------------------------------------------------------# 
+	
+	1) The JEA Module
+	2) Roles & Capabilities
+	3) Analytics
+	
+	 #-----------------------------------------------------------------------# 
+	 #                           1) The JEA Module                           # 
+	 #-----------------------------------------------------------------------# 
+	
+	A JEA Module is a group of JEA Resources. These Include:
+	- Capabilities: Individual actions a connected user may be able to perform.
+	                For example, the ability to run Restart-Service, but only
+					with the parameter '-Name' and that only with the values
+					'Spooler' or 'dns'.
+	- Roles: A role is a set of capabilities. These can be granted to groups
+	         or users and thus define, what kind of actions a user can perform
+			 on the endpoint.
+	- Functions: A JEA Module can publish functions like any other module.
+				 These are specifically designed for use in capabilities.
+				 For example, using Import-JeaScriptFile will create both a
+				 capability and a function.
+	
+	When converting this into an actual PowerShell module, it will generate a
+	package that in its entirety represents a PowerShell remoting endpoint in
+	WinRM. It comes with its own installation routine and can be deployed using
+	the common package management tools of PowerShell.
+	
+	Example of creating and writing a JEA Module:
+	
+	$module = New-JeaModule -Name ServerOperations -Description 'JEA Module for basic Server Operations' -Author 'Friedrich Weinmann' -Company Contoso -Version 1.0.0
+	'Restart-Computer', 'Get-ScheduledTask', 'Start-ScheduledTask', 'Stop-ScheduledTask' | Get-Command | New-JeaRole -Name 'ServerSystem' -Identity 'contoso\ServerSystemPermissions' -Module $module
+	'Send-RDUserMessage', 'Get-RDUserSession', 'Disconnect-RDUser' | New-JeaRole -Name 'RDSHelpDesk' -Identity 'contoso\RDSHelpDeskPermissions' -Module $module
+	$module | Export-JeaModule -Path '.'
+	
+	
+	 #-----------------------------------------------------------------------# 
+	 #                        2) Roles & Capabilities                        # 
+	 #-----------------------------------------------------------------------# 
+	
+	# [TODO: Add Content]
+	
+	
+	 #-----------------------------------------------------------------------# 
+	 #                             3) Analytics                              # 
+	 #-----------------------------------------------------------------------# 
+	
+	# [TODO: Add Content]
 
 KEYWORDS
 	JEAnalyzer

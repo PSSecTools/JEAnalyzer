@@ -256,7 +256,7 @@
             Creates an empty role. Used for serialization.
             </summary>
         </member>
-        <member name="M:JEAnalyzer.Role.#ctor(System.String,System.String)">
+        <member name="M:JEAnalyzer.Role.#ctor(System.String,System.String[])">
             <summary>
             Create a role pre-seeded with name and identity
             </summary>

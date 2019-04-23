@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using PSFramework.Localization;
 
@@ -69,7 +70,7 @@ namespace JEAnalyzer
             Name = (string)Table["Name"].ToString();
 
             if (Table.ContainsKey("ValidateSet"))
-                ValidateSet = (string[])Table["ValidateSet"];
+                ValidateSet = ((object[])Table["ValidateSet"]).Cast<string>().ToArray();
             if (Table.ContainsKey("ValidatePattern"))
                 ValidatePattern = (string)Table["ValidatePattern"];
         }

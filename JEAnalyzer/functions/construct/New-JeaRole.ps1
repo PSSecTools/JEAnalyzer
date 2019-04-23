@@ -55,6 +55,7 @@
 		$Name,
 		
 		[Parameter(Mandatory = $true)]
+		[string[]]
 		$Identity,
 		
 		[Parameter(ValueFromPipeline = $true)]
