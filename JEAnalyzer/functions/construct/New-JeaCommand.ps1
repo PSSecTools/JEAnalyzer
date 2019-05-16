@@ -73,7 +73,7 @@
 		}
 		foreach ($parameterItem in $Parameter)
 		{
-			$resultCommand.Parameter[$parameterItem.Name] = $parameterItem
+			$resultCommand.Parameters[$parameterItem.Name] = $parameterItem
 		}
 		# Add to role if specified, otherwise return
 		if ($Role) { $null = $Role.CommandCapability[$commandData.CommandName] = $resultCommand }

@@ -226,12 +226,20 @@ function {0}
 			Copy-Item -Path "$script:ModuleRoot\internal\resources\jeamodule.psm1" -Destination "$($rootFolder.FullName)\$($moduleName).psm1"
 			
 			# PSSession Configuration
-			$grouped = $moduleObject.Roles.Values | Group-Object Identity
+			$grouped = $moduleObject.Roles.Values | ForEach-Object {
+				foreach ($identity in $_.Identity)
+				{
+					[pscustomobject]@{
+						Identity = $identity
+						Role = $_
+					}
+				}
+			} | Group-Object Identity
 			$roleDefinitions = @{ }
 			foreach ($groupItem in $grouped)
 			{
 				$roleDefinitions[$groupItem.Name] = @{
-					RoleCapabilityFiles = ($groupItem.Group.Name | ForEach-Object { "C:\Program Files\WindowsPowerShell\Modules\{0}\{1}\RoleCapabilities\{2}.psrc" -f $moduleName, $Module.Version, $_ })
+					RoleCapabilityFiles = ($groupItem.Group.Role.Name | ForEach-Object { "C:\Program Files\WindowsPowerShell\Modules\{0}\{1}\RoleCapabilities\{2}.psrc" -f $moduleName, $Module.Version, $_ })
 				}
 			}
 			$paramNewPSSessionConfigurationFile = @{

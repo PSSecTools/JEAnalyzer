@@ -35,7 +35,7 @@
 		if (-not $script:allcommands)
 		{
 			# Cache known commands once
-			Write-PSFMessage -Level Verbose -Message "Gathering command information"
+			Write-PSFMessage -Level Warning -Message "Gathering command information for the first time. This may take quite a while."
 			$script:allcommands = Get-Command | Group-Object Name | ForEach-Object { $_.Group | Sort-Object Version -Descending | Select-Object -First 1 }
 		}
 	}

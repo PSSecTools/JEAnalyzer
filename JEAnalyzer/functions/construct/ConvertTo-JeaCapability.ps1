@@ -79,7 +79,8 @@
 				#region String
 				'System.String'
 				{
-					Get-Command -Name $inputItem -ErrorAction SilentlyContinue | ConvertTo-JeaCapability
+					if (Test-Path $inputItem) { Import-JeaScriptFile -Path $inputItem }
+					else { Get-Command -Name $inputItem -ErrorAction SilentlyContinue | ConvertTo-JeaCapability }
 					break
 				}
 				#endregion String
