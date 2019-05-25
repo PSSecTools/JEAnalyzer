@@ -51,8 +51,17 @@
 				File		  = $File
 			}
 			$commandObject | Select-PSFObject -KeepInputObject -ScriptProperty @{
-				IsDangerous	= {
+				IsDangerous = {
+					# Parameters that accept scriptblocks are assumed to be dangerous
 					if ($this.CommandObject.Parameters.Values | Where-Object { $_.ParameterType.FullName -eq 'System.Management.Automation.ScriptBlock' }) { return $true }
+					
+					# If the command is flagged as dangerous for JEA, mark it as such
+					if ($this.CommandObject.Definition -match 'PSFramework\.PSFCore\.NoJeaCommand') { return $true }
+					
+					# If the command has a parameter flagged as dangerous for JEA, the command is a danger
+					if ($this.CommandObject.Parameters.Values | Where-Object { $_.Attributes | Where-Object { $_ -is [PSFramework.PSFCore.NoJeaParameterAttribute] } }) { return $true }
+						
+					# Default: Is the command blacklisted?
 					(& (Get-Module JEAnalyzer) { $script:dangerousCommands }) -contains $this.CommandName
 				}
 			}
