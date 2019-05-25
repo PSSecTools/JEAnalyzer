@@ -131,8 +131,8 @@ function {0}
 }}
 '@ -f $functionName, ([System.IO.File]::ReadAllText($file, $Encoding))
 				
-				& $functionString
-				$functionInfo = Get-Command -Name $testResult.Name
+				Invoke-Expression $functionString
+				$functionInfo = Get-Command -Name $functionName
 				$capability = New-Object -TypeName 'JEAnalyzer.CapabilityScript'
 				$capability.Content = $functionInfo
 				$capability.Name = $functionInfo.Name
