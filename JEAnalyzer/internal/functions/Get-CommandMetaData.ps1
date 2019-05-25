@@ -36,7 +36,8 @@
 		{
 			# Cache known commands once
 			Write-PSFMessage -Level Warning -Message "Gathering command information for the first time. This may take quite a while."
-			$script:allcommands = Get-Command | Group-Object Name | ForEach-Object { $_.Group | Sort-Object Version -Descending | Select-Object -First 1 }
+			[System.Collections.ArrayList]$script:allcommands = Get-Command | Group-Object Name | ForEach-Object { $_.Group | Sort-Object Version -Descending | Select-Object -First 1 }
+			Get-Alias | Where-Object Name -NotIn $script:allcommands.Name | ForEach-Object { $null = $script:allcommands.Add($_) }
 		}
 	}
 	process
