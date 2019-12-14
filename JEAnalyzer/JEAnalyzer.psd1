@@ -3,6 +3,7 @@
 	RootModule = 'JEAnalyzer.psm1'
 	
 	# Version number of this module.
+
 	ModuleVersion = '1.1.0'
 	
 	# ID used to uniquely identify this module
