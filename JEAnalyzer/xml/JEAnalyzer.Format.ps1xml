@@ -10,12 +10,12 @@
             <TableControl>
                 <AutoSize/>
                 <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
                     <TableColumnHeader>
-                        <Alignment>Right</Alignment>
+                        <Label>CommandType</Label>
                     </TableColumnHeader>
-                    <TableColumnHeader/>
-                    <TableColumnHeader/>
-                    <TableColumnHeader/>
                 </TableHeaders>
                 <TableRowEntries>
                     <TableRowEntry>
@@ -27,10 +27,12 @@
                                 <PropertyName>CommandName</PropertyName>
                             </TableColumnItem>
                             <TableColumnItem>
-                                <PropertyName>Module</PropertyName>
+                                <PropertyName>ModuleName</PropertyName>
                             </TableColumnItem>
                             <TableColumnItem>
-                                <PropertyName>CommandType</PropertyName>
+                                <ScriptBlock>
+ $_.CommandObject.CommandType 
+                                </ScriptBlock>
                             </TableColumnItem>
                         </TableColumnItems>
                     </TableRowEntry>

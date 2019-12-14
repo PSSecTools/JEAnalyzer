@@ -1,4 +1,1 @@
-﻿<#
-# Example:
-Register-PSFTeppArgumentCompleter -Command Get-Alcohol -Parameter Type -Name JEAnalyzer.alcohol
-#>
+﻿Register-PSFTeppArgumentCompleter -Command Import-JeaScriptFile -Parameter Encoding -Name psframework-encoding

@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JEAnalyzer</name>
+    </assembly>
+    <members>
+        <member name="T:JEAnalyzer.Capability">
+            <summary>
+            Base class for capabilities
+            </summary>
+        </member>
+        <member name="P:JEAnalyzer.Capability.Type">
+            <summary>
+            The type of the capability. The set should do nothing, the get always return a static return.
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Capability.Name">
+            <summary>
+            The name of the capability
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.Capability.ToHashtable(System.String)">
+            <summary>
+            Return a hashtable representation for use in a Role Capability File
+            </summary>
+            <param name="ModuleName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JEAnalyzer.CapabilityCommand">
+            <summary>
+            A command to allow to the user
+            </summary>
+        </member>
+        <member name="P:JEAnalyzer.CapabilityCommand.Type">
+            <summary>
+            The type of the capability
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CapabilityCommand.CommandType">
+            <summary>
+            The kind of command this is.
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CapabilityCommand.Parameters">
+            <summary>
+            Parameter constraints to apply to the command.
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.CapabilityCommand.ToHashtable(System.String)">
+            <summary>
+            Converts this capability into a hashtable needed for the export to a role capability file.
+            </summary>
+            <param name="ModuleName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JEAnalyzer.CapabilityScript">
+            <summary>
+            A capability born of a script file.
+            The file is stored as a function.
+            </summary>
+        </member>
+        <member name="P:JEAnalyzer.CapabilityScript.Type">
+            <summary>
+            The type of the capability
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CapabilityScript.Content">
+            <summary>
+            The actual function Definition
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CapabilityScript.Parameters">
+            <summary>
+            Parameter constraints to apply to the command.
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.CapabilityScript.ToHashtable(System.String)">
+            <summary>
+            Converts this capability into a hashtable needed for the export to a role capability file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:JEAnalyzer.CapabilityType">
+            <summary>
+            List of supported capability types
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CapabilityType.Command">
+            <summary>
+            A cmdlet or function
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CapabilityType.Script">
+            <summary>
+            An input script that should be deployed as part of the module.
+            </summary>
+        </member>
+        <member name="T:JEAnalyzer.CommandInfo">
+            <summary>
+            Information on a given PowerShell command
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CommandInfo.CommandName">
+            <summary>
+            The name of the command
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CommandInfo.CommandObject">
+            <summary>
+            The full command object
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.CommandInfo.File">
+            <summary>
+            The file the command invocation was read from
+            </summary>
+        </member>
+        <member name="P:JEAnalyzer.CommandInfo.IsAlias">
+            <summary>
+            Whether the command is an alias
+            </summary>
+        </member>
+        <member name="P:JEAnalyzer.CommandInfo.ModuleName">
+            <summary>
+            The name of the module the command comes from
+            </summary>
+        </member>
+        <member name="T:JEAnalyzer.Module">
+            <summary>
+            A Jea Module package, to be export as powershell module and packaged to the target system.
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.Name">
+            <summary>
+            The name of the module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.Description">
+            <summary>
+            A suitable description
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.Version">
+            <summary>
+            THe version of the module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.Author">
+            <summary>
+            The author of the module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.Company">
+            <summary>
+            The company the module is deployed by
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.Roles">
+            <summary>
+            The roles contained in the module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.PreimportScripts">
+            <summary>
+            Script code the module will execute before loading functions
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.PostimportScripts">
+            <summary>
+            Script code the module will execute after loading functions
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.PrivateFunctions">
+            <summary>
+            Functions the module contains but are not published
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.PublicFunctions">
+            <summary>
+            Functions the module contains and publishes.
+            </summary>
+        </member>
+        <member name="T:JEAnalyzer.Parameter">
+            <summary>
+            Represents a parameter constraint on a JEA capability's command
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Parameter.Name">
+            <summary>
+            The name of the parameter to permit.
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Parameter.ValidateSet">
+            <summary>
+            The set of valid values for the parameter.
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Parameter.ValidatePattern">
+            <summary>
+            A pattern input to this parameter must match.
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.Parameter.#ctor">
+            <summary>
+            Creates an empty parameter (used for serialization)
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.Parameter.#ctor(System.String)">
+            <summary>
+            Creates a parameter without value constraints
+            </summary>
+            <param name="Name">Name of the parameter</param>
+        </member>
+        <member name="M:JEAnalyzer.Parameter.#ctor(System.String,System.String[],System.String)">
+            <summary>
+            Creates a parameter with value constraints
+            </summary>
+            <param name="Name">Name of the parameter</param>
+            <param name="ValidateSet">A set of legal values for the parameter</param>
+            <param name="ValidatePattern">A regex pattern input must match.</param>
+        </member>
+        <member name="M:JEAnalyzer.Parameter.#ctor(System.Collections.Hashtable)">
+            <summary>
+            Parses out a parameter from an input hashtable
+            </summary>
+            <param name="Table">The hashtable to interpret as parameter</param>
+        </member>
+        <member name="M:JEAnalyzer.Parameter.ToHashtable">
+            <summary>
+            Returns the hashtable needed for the role capability file
+            </summary>
+            <returns>A hashtable</returns>
+        </member>
+        <member name="T:JEAnalyzer.Role">
+            <summary>
+            A role in a JEA Module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Role.Name">
+            <summary>
+            The name of the role
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Role.Identity">
+            <summary>
+            The identity (user/group) being granted permission to the role.
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Role.CommandCapability">
+            <summary>
+            List of command capabilities
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.Role.#ctor">
+            <summary>
+            Creates an empty role. Used for serialization.
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.Role.#ctor(System.String,System.String[])">
+            <summary>
+            Create a role pre-seeded with name and identity
+            </summary>
+            <param name="Name">The name of the role</param>
+            <param name="Identity">The Identity to be granted access to the role.</param>
+        </member>
+        <member name="M:JEAnalyzer.Role.VisibleCmdlets">
+            <summary>
+            The list of Cmdlets that are part of the role.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JEAnalyzer.Role.VisibleFunctions(System.String)">
+            <summary>
+            The list of Functions that are part of the role.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JEAnalyzer.Role.CopyFunctionDefinitions(JEAnalyzer.Module)">
+            <summary>
+            Transcribes all function definitions to the specified module object.
+            </summary>
+            <param name="ModuleObject">The object to receive the function definitions</param>
+        </member>
+        <member name="T:JEAnalyzer.ScriptFile">
+            <summary>
+            A scriptfile deployed with the JEA module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.ScriptFile.Name">
+            <summary>
+            Name of the file
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.ScriptFile.Text">
+            <summary>
+            Content of the file
+            </summary>
+        </member>
+    </members>
+</doc>

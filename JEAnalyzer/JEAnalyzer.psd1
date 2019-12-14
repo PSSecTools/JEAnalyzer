@@ -1,9 +1,10 @@
 ﻿@{
 	# Script module or binary module file associated with this manifest
-	ModuleToProcess = 'JEAnalyzer.psm1'
+	RootModule = 'JEAnalyzer.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.0.0.1'
+
+	ModuleVersion = '1.1.0'
 	
 	# ID used to uniquely identify this module
 	GUID = '346caa76-534a-4651-88f5-359e85cd71c0'
@@ -26,11 +27,11 @@
 	# Modules that must be imported into the global environment prior to importing
 	# this module
 	RequiredModules = @(
-		@{ ModuleName = 'PSFramework'; ModuleVersion = '0.9.25.113' }
+		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.12' }
 	)
 	
 	# Assemblies that must be loaded prior to importing this module
-	# RequiredAssemblies = @('bin\JEAnalyzer.dll')
+	RequiredAssemblies = @('bin\JEAnalyzer.dll')
 	
 	# Type files (.ps1xml) to be loaded when importing this module
 	# TypesToProcess = @('xml\JEAnalyzer.Types.ps1xml')
@@ -40,9 +41,16 @@
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
-		'Export-JeaRoleCapFile'
+		'Add-JeaModuleRole'
+		'ConvertTo-JeaCapability'
+		'Import-JeaScriptFile'
+		'New-JeaCommand'
+		'New-JeaModule'
+		'New-JeaRole'
 		'Read-JeaScriptblock'
 		'Read-JeaScriptFile'
+		'Export-JeaModule'
+		'Export-JeaRoleCapFile'
 	)
 	
 	# Cmdlets to export from this module

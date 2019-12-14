@@ -45,8 +45,8 @@ function Import-ModuleFile
 		$Path
 	)
 	
-	if ($doDotSource) { . (Resolve-Path $Path) }
-	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText((Resolve-Path $Path)))), $null, $null) }
+	if ($doDotSource) { . (Resolve-Path $Path).ProviderPath }
+	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText((Resolve-Path $Path).ProviderPath))), $null, $null) }
 }
 
 #region Load individual files

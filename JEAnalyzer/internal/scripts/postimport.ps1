@@ -6,7 +6,14 @@ foreach ($file in (Get-ChildItem "$ModuleRoot\internal\configurations\*.ps1" -Er
 }
 
 # Load Tab Expansion
-foreach ($file in (Get-ChildItem "$ModuleRoot\internal\tepp\*.tepp.ps1" -ErrorAction Ignore)) {
+foreach ($file in (Get-ChildItem "$ModuleRoot\internal\tepp\*.tepp.ps1" -ErrorAction Ignore))
+{
+	. Import-ModuleFile -Path $file.FullName
+}
+
+# Load Scriptblocks
+foreach ($file in (Get-ChildItem "$ModuleRoot\internal\scriptblock\*.ps1" -ErrorAction Ignore))
+{
 	. Import-ModuleFile -Path $file.FullName
 }
 
