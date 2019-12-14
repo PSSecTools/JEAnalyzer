@@ -130,7 +130,8 @@ function {0}
 			foreach ($folder in $folders)
 			{
 				Write-PSFMessage -String 'Export-JeaModule.Folder.Content' -StringValues $folder
-				$null = New-Item -Path (Join-Path -Path $rootFolder.FullName -ChildPath $folder) -ItemType Directory -Force
+				$folderItem = New-Item -Path (Join-Path -Path $rootFolder.FullName -ChildPath $folder) -ItemType Directory -Force
+				'# <Placeholder>' | Set-Content -Path "$($folderItem.FullName)\readme.md"
 			}
 			#endregion Create Module folder
 			
