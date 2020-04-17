@@ -48,6 +48,7 @@
 		It then creates a JEA Role named 'Logon', granting access to all AD Users to the commands selected.
 		Finally, it adds the new role to the JEA Module object stored in $module.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]

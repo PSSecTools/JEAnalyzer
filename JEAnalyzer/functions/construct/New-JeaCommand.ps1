@@ -32,8 +32,11 @@
 		This is less user friendly, but allows catching exceptions in calling scripts.
 	
 	.EXAMPLE
-		PS C:\> New-JeaCommand -Name 'value1'
+		PS C:\> New-JeaCommand -Name 'Restart-Service' -parameter 'Name'
+
+		Generates a command object allowing the use of Get-Service, but only with the parameter "-Name"
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
