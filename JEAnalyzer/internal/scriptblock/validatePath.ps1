@@ -1,4 +1,4 @@
-Set-PSFScriptblock -Name 'JEAnalyzer.ValidatePath.Directory' -Scriptblock {
+﻿Set-PSFScriptblock -Name 'JEAnalyzer.ValidatePath.Directory' -Scriptblock {
 	Param ($Path)
 	if (-not (Test-Path $Path)) { return $false }
 	try { $null = Resolve-PSFPath -Path $Path -Provider FileSystem -SingleItem }

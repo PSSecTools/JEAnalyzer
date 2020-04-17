@@ -47,6 +47,7 @@
 	
 		Reads all scriptfiles in C:\JEA\Role1, converts them into functions, names them and adds them to the role stored in $role.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]

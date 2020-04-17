@@ -42,6 +42,7 @@
 		
 		Creates a JEA module object with the name JEA_ADUser.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
