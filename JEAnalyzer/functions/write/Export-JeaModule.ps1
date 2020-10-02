@@ -19,6 +19,11 @@
 	.PARAMETER Module
 		The module object to export.
 	
+	.PARAMETER Basic
+		Whether the JEA module should be deployed as a basic/compatibility version.
+		In that mode, it will not generate a version folder and target role capabilities by name rather than path.
+		This is compatible with older operating systems but prevents simple deployment via package management.
+	
 	.EXAMPLE
 		PS C:\> $module | Export-JeaModule -Path 'C:\temp'
 	
@@ -33,7 +38,10 @@
 		
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]
 		[JEAnalyzer.Module[]]
-		$Module
+		$Module,
+		
+		[switch]
+		$Basic
 	)
 	
 	begin
@@ -116,8 +124,15 @@ function {0}
 				$moduleBase = New-Item -Path $resolvedPath -Name $moduleName -ItemType Directory -Force
 				Write-PSFMessage -String 'Export-JeaModule.Folder.ModuleBaseNew' -StringValues $moduleBase.FullName
 			}
-			Write-PSFMessage -String 'Export-JeaModule.Folder.VersionRoot' -StringValues $moduleBase.FullName, $moduleObject.Version
-			$rootFolder = New-Item -Path $moduleBase.FullName -Name $moduleObject.Version -ItemType Directory -Force
+			if ($Basic)
+			{
+				$rootFolder = $moduleBase
+			}
+			else
+			{
+				Write-PSFMessage -String 'Export-JeaModule.Folder.VersionRoot' -StringValues $moduleBase.FullName, $moduleObject.Version
+				$rootFolder = New-Item -Path $moduleBase.FullName -Name $moduleObject.Version -ItemType Directory -Force
+			}
 			
 			# Other folders for the scaffold
 			$folders = @(
@@ -146,6 +161,7 @@ function {0}
 					CompanyName    = $moduleObject.Company
 					VisibleCmdlets = $role.VisibleCmdlets()
 					VisibleFunctions = $role.VisibleFunctions($moduleName)
+					ModulesToImport = $moduleName
 				}
 				Write-PSFMessage -String 'Export-JeaModule.Role.NewRole' -StringValues $role.Name, $role.CommandCapability.Count
 				New-PSRoleCapabilityFile @RoleCapParams
@@ -206,11 +222,11 @@ function {0}
 			#endregion Create Public Functions
 			
 			#region Create Scriptblocks
-			foreach ($scriptFile in $moduleObject.PreimportScripts.Value)
+			foreach ($scriptFile in $moduleObject.PreimportScripts.Values)
 			{
 				Write-File -Text $scriptFile.Text -Path "$($rootFolder.FullName)\internal\scriptsPre\$($scriptFile.Name).ps1"
 			}
-			foreach ($scriptFile in $moduleObject.PostimportScripts.Value)
+			foreach ($scriptFile in $moduleObject.PostimportScripts.Values)
 			{
 				Write-File -Text $scriptFile.Text -Path "$($rootFolder.FullName)\internal\scriptsPost\$($scriptFile.Name).ps1"
 			}
@@ -219,9 +235,11 @@ function {0}
 			#region Create Common Resources
 			# Register-JeaEndpoint
 			$encoding = New-Object System.Text.UTF8Encoding($true)
-			$functionText = [System.IO.File]::ReadAllText("$script:ModuleRoot\internal\resources\Register-JeaEndpoint.ps1", $encoding)
-			$functionText = $functionText -replace 'Register-JeaEndpoint', "Register-JeaEndpoint_$($moduleName)"
+			$functionText = [System.IO.File]::ReadAllText("$script:ModuleRoot\internal\resources\Register-JeaEndpointPublic.ps1", $encoding)
+			$functionText = $functionText -replace 'Register-JeaEndpointPublic', "Register-JeaEndpoint_$($moduleName)"
 			Write-File -Text $functionText -Path "$($rootFolder.FullName)\functions\Register-JeaEndpoint_$($moduleName).ps1"
+			$functionText2 = [System.IO.File]::ReadAllText("$script:ModuleRoot\internal\resources\Register-JeaEndpoint.ps1", $encoding)
+			Write-File -Text $functionText2 -Path "$($rootFolder.FullName)\internal\functions\Register-JeaEndpoint.ps1"
 			
 			# PSM1
 			Copy-Item -Path "$script:ModuleRoot\internal\resources\jeamodule.psm1" -Destination "$($rootFolder.FullName)\$($moduleName).psm1"
@@ -239,8 +257,17 @@ function {0}
 			$roleDefinitions = @{ }
 			foreach ($groupItem in $grouped)
 			{
+				if ($Basic)
+				{
+					$roleDefinitions[$groupItem.Name] = @{
+						RoleCapabilities = $groupItem.Group.Role.Name
+					}
+				}
+				else
+				{
 				$roleDefinitions[$groupItem.Name] = @{
-					RoleCapabilityFiles = ($groupItem.Group.Role.Name | ForEach-Object { "C:\Program Files\WindowsPowerShell\Modules\{0}\{1}\RoleCapabilities\{2}.psrc" -f $moduleName, $Module.Version, $_ })
+						RoleCapabilityFiles = ($groupItem.Group.Role.Name | ForEach-Object { "C:\Program Files\WindowsPowerShell\Modules\{0}\{1}\RoleCapabilities\{2}.psrc" -f $moduleName, $Module.Version, $_ })
+					}
 				}
 			}
 			$paramNewPSSessionConfigurationFile = @{
@@ -269,6 +296,7 @@ function {0}
 				ModuleVersion	  = $moduleObject.Version
 				Tags			  = 'JEA', 'JEAnalyzer', 'JEA_Module'
 			}
+			if ($moduleObject.RequiredModules) { $paramNewModuleManifest.RequiredModules = $moduleObject.RequiredModules }
 			Write-PSFMessage -String 'Export-JeaModule.File.Create' -StringValues "$($rootFolder.FullName)\$($moduleName).psd1"
 			New-ModuleManifest @paramNewModuleManifest
 			#endregion Create Common Resources

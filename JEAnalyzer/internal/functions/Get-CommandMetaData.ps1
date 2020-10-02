@@ -47,9 +47,9 @@
 			Write-PSFMessage -Level Verbose -Message "Adding meta information for: $($command)"
 			$commandObject = New-Object -TypeName 'JEAnalyzer.CommandInfo' -Property @{
 				CommandName   = $command
-				CommandObject = $script:allcommands | Where-Object Name -EQ $command
 				File		  = $File
 			}
+			if ($object = $script:allcommands | Where-Object Name -EQ $command) { $commandObject.CommandObject = $object }
 			$commandObject | Select-PSFObject -KeepInputObject -ScriptProperty @{
 				IsDangerous = {
 					# Parameters that accept scriptblocks are assumed to be dangerous

@@ -4,16 +4,16 @@
 	
 	# Version number of this module.
 
-	ModuleVersion = '1.1.0'
+	ModuleVersion = '1.2.10'
 	
 	# ID used to uniquely identify this module
 	GUID = '346caa76-534a-4651-88f5-359e85cd71c0'
 	
 	# Author of this module
-	Author = 'Miriam Wiesner'
+	Author = 'Miriam Wiesner, Friedrich Weinmann'
 	
 	# Company or vendor of this module
-	CompanyName = 'Miriam Wiesner'
+	CompanyName = ' '
 	
 	# Copyright statement for this module
 	Copyright = 'Copyright (c) 2018 Miriam Wiesner'
@@ -27,7 +27,7 @@
 	# Modules that must be imported into the global environment prior to importing
 	# this module
 	RequiredModules = @(
-		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.12' }
+		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.4.150' }
 	)
 	
 	# Assemblies that must be loaded prior to importing this module
@@ -42,25 +42,28 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Add-JeaModuleRole'
+		'Add-JeaModuleScript'
 		'ConvertTo-JeaCapability'
+		'Export-JeaModule'
+		'Export-JeaRoleCapFile'
 		'Import-JeaScriptFile'
+		'Install-JeaModule'
 		'New-JeaCommand'
 		'New-JeaModule'
 		'New-JeaRole'
 		'Read-JeaScriptblock'
 		'Read-JeaScriptFile'
-		'Export-JeaModule'
-		'Export-JeaRoleCapFile'
+		'Test-JeaCommand'
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport = ''
+	# CmdletsToExport = ''
 	
 	# Variables to export from this module
-	VariablesToExport = ''
+	# VariablesToExport = ''
 	
 	# Aliases to export from this module
-	AliasesToExport = ''
+	# AliasesToExport = ''
 	
 	# List of all modules packaged with this module
 	ModuleList = @()

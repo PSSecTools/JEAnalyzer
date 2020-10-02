@@ -37,6 +37,25 @@
 		The version of the JEA Module.
 		A higher version will superseed all older versions of the same name.
 	
+	.PARAMETER PreImport
+		Scripts to execute during JEA module import, before loading functions.
+		Offer either:
+		- The path to the file to add
+		- A hashtable with two keys: Name & Text
+	
+	.PARAMETER PostImport
+		Scripts to execute during JEA module import, after loading functions.
+		Offer either:
+		- The path to the file to add
+		- A hashtable with two keys: Name & Text
+	
+	.PARAMETER RequiredModules
+		Any dependencies the module has.
+		Note: Specify this in the same manner you would in a module manifest.
+		Note2: Do not use this for modules you cannot publish in a repository if you want to distribute this JEA module in such.
+		For example, taking a dependency on the Active Directory module would be disadvised.
+		In this coses, instead import them as a PreImport-script.
+	
 	.EXAMPLE
 		PS C:\> New-JeaModule -Name 'JEA_ADUser' -Description 'Grants access to the Get-ADUser command'
 		
@@ -62,13 +81,18 @@
 		$Company = (Get-PSFConfigValue -FullName 'JEAnalyzer.Company'),
 		
 		[version]
-		$Version = '1.0.0'
+		$Version = '1.0.0',
+		
+		[JEAnalyzer.ScriptFile[]]
+		$PreImport,
+		
+		[JEAnalyzer.ScriptFile[]]
+		$PostImport,
+		
+		[object]
+		$RequiredModules
 	)
 	
-	begin
-	{
-		Write-PSFMessage -Level InternalComment -String 'General.BoundParameters' -StringValues ($PSBoundParameters.Keys -join ", ") -Tag 'debug', 'start', 'param'
-	}
 	process
 	{
 		Write-PSFMessage -String 'New-JeaModule.Creating' -StringValues $Name, $Version
@@ -80,6 +104,10 @@
 			Company	    = $Company
 		}
 		if ($Identity) { $module.Roles[$Name] = New-JeaRole -Name $Name -Identity $Identity }
+		if ($RequiredModules) { $module.RequiredModules = $RequiredModules }
+		foreach ($scriptFile in $PreImport) { $module.PreimportScripts[$scriptFile.Name] = $scriptFile }
+		foreach ($scriptFile in $PostImport) { $module.PostimportScripts[$scriptFile.Name] = $scriptFile }
+		
 		$module
 	}
 }
