@@ -36,6 +36,11 @@ namespace JEAnalyzer
         public string Company;
 
         /// <summary>
+        /// Modules required for this module
+        /// </summary>
+        public object RequiredModules;
+
+        /// <summary>
         /// The roles contained in the module
         /// </summary>
         public Dictionary<string, Role> Roles = new Dictionary<string, Role>(StringComparer.InvariantCultureIgnoreCase);

@@ -296,5 +296,23 @@
             Content of the file
             </summary>
         </member>
+        <member name="M:JEAnalyzer.ScriptFile.#ctor">
+            <summary>
+            Create an empty file object
+            </summary>
+        </member>
+        <member name="M:JEAnalyzer.ScriptFile.#ctor(System.String)">
+            <summary>
+            Create a file object based on an existing file
+            </summary>
+            <param name="Path">Path to the file to load</param>
+        </member>
+        <member name="M:JEAnalyzer.ScriptFile.#ctor(System.String,System.String)">
+            <summary>
+            Create a file object from provided values
+            </summary>
+            <param name="Name">Name of the file (should not include an extension)</param>
+            <param name="Text">The text content of the file</param>
+        </member>
     </members>
 </doc>

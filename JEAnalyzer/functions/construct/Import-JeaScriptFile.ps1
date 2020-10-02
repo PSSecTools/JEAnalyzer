@@ -145,7 +145,7 @@ function {0}
 			#region Case: Parse Error
 			elseif ($testResult.ErrorType -eq 'ParseError')
 			{
-				Stop-PSFFunction -String 'Import-JeaScriptFile.ParsingError' -StringValues $file -Continue
+				Stop-PSFFunction -String 'Import-JeaScriptFile.ParsingError' -StringValues $file -Continue -EnableException $EnableException
 			}
 			#endregion Case: Parse Error
 			
@@ -165,13 +165,9 @@ function {0}
 			#region Case: Unknown State (Should never happen)
 			else
 			{
-				Stop-PSFFunction -String 'Import-JeaScriptFile.UnknownError' -StringValues $file -Continue
+				Stop-PSFFunction -String 'Import-JeaScriptFile.UnknownError' -StringValues $file -Continue -EnableException $EnableException
 			}
 			#endregion Case: Unknown State (Should never happen)
 		}
-	}
-	end
-	{
-		
 	}
 }
