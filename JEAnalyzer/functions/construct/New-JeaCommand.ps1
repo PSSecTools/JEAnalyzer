@@ -23,6 +23,11 @@
 		By default, the command object will just be returned by this function.
 		If you specify a role, it will instead only be added to the role.
 	
+	.PARAMETER CommandType
+		The type of command to add.
+		Only applies when the command cannot be resolved.
+		Defaults to function.
+	
 	.PARAMETER Force
 		Override the security warning when generating an unsafe command.
 		By default, New-JeaCommand will refuse to create a command object for commands deemed unsafe for use in JEA.
@@ -49,6 +54,9 @@
 		[JEAnalyzer.Role]
 		$Role,
 		
+		[System.Management.Automation.CommandTypes]
+		$CommandType = [System.Management.Automation.CommandTypes]::Function,
+		
 		[switch]
 		$Force,
 		
@@ -72,8 +80,10 @@
 		
 		$resultCommand = New-Object -TypeName 'JEAnalyzer.CapabilityCommand' -Property @{
 			Name = $commandData.CommandName
-			CommandType = $commandData.CommandObject.CommandType
 		}
+		if ($commandData.CommandObject) { $resultCommand.CommandType = $commandData.CommandObject.CommandType }
+		else { $resultCommand.CommandType = $CommandType }
+		
 		foreach ($parameterItem in $Parameter)
 		{
 			$resultCommand.Parameters[$parameterItem.Name] = $parameterItem
