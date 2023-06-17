@@ -1,13 +1,11 @@
-﻿Install-Module Microsoft.PowerShell.PSResourceGet -Force -AllowPrerelease
-
-$modules = @(
+﻿$modules = @(
 	'Pester'
 	'PSScriptAnalyzer'
 	'PSFramework'
 	'PSModuleDevelopment'
 )
 
-foreach ($module in $Modules) {
+foreach ($module in $modules) {
 	Write-Host "Installing $module" -ForegroundColor Cyan
-	Install-PSResource $module
+	Install-Module $module -Force -SkipPublisherCheck
 }
