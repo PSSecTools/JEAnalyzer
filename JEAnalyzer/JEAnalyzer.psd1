@@ -55,6 +55,7 @@
 		'Read-JeaScriptblock'
 		'Read-JeaScriptFile'
 		'Test-JeaCommand'
+		'Uninstall-JeaModule'
 	)
 	
 	# Cmdlets to export from this module

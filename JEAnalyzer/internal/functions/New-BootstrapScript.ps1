@@ -27,6 +27,7 @@
 		
 		Takes all items in the current folder, wraps them into a bootstrap script and writes that single file to C:\temp\bootstrap.ps1
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
