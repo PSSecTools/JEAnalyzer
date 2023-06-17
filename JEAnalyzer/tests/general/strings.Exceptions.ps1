@@ -16,4 +16,18 @@ $exceptions['LegalSurplus'] = @(
 
 )
 
+$exceptions['NoTextNeeded'] = @(
+	'Validate.FSPath'
+	'Validate.FSPath.File'
+	'Validate.FSPath.FileOrParent'
+	'Validate.FSPath.Folder'
+	'Validate.Path'
+	'Validate.Path.Container'
+	'Validate.Path.Leaf'
+	'Validate.TimeSpan.Positive'
+	'Validate.Uri.Absolute'
+	'Validate.Uri.Absolute.File'
+	'Validate.Uri.Absolute.Https'
+)
+
 $exceptions
