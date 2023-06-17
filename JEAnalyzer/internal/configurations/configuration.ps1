@@ -16,3 +16,4 @@ Set-PSFConfig -Module 'JEAnalyzer' -Name 'Import.IndividualFiles' -Value $false 
 
 Set-PSFConfig -Module 'JEAnalyzer' -Name 'Author' -Value $env:USERNAME -Initialize -Validation 'string' -SimpleExport -Description 'The default author name to use when creating role capability files'
 Set-PSFConfig -Module 'JEAnalyzer' -Name 'Company' -Value 'JEAnalyzer' -Initialize -Validation 'string' -SimpleExport -Description 'The default company name to use when creating role capability files'
+Set-PSFConfig -Module 'JEAnalyzer' -Name 'DefaultRepository' -Value 'PSGallery' -Initialize -Validation 'string' -SimpleExport -Description 'The PowerShell repository to use for module access'

@@ -1,6 +1,5 @@
-﻿function Export-JeaModule
-{
-<#
+﻿function Export-JeaModule {
+	<#
 	.SYNOPSIS
 		Exports a JEA module object into a PowerShell Module.
 	
@@ -23,11 +22,30 @@
 		Whether the JEA module should be deployed as a basic/compatibility version.
 		In that mode, it will not generate a version folder and target role capabilities by name rather than path.
 		This is compatible with older operating systems but prevents simple deployment via package management.
+
+	.PARAMETER NoConnectionCode
+		By default, when exporting the module to file, it also includes a file describing how to connect to the JEA endpoint.
+		This switch disables that.
+
+	.PARAMETER AsBootstrap
+		Rather than exporting the JEA module as a module folder structure, it is exported as a single scriptfile that will set itself up on execution.
+		This is intended to ease JEA endpoint deployment via Intune or other orchestration platforms.
+
+	.PARAMETER IncludeDependency
+		This parameter is only used when combined with -AsBootstrap
+		All required modules will also be embedded into the bootstrap script.
+		Note: These modules are retrieved from the default repository!
+		Update the "JEAnalyzer.DefaultRepository" setting to select an internal repository.
 	
 	.EXAMPLE
 		PS C:\> $module | Export-JeaModule -Path 'C:\temp'
 	
 		Exports the JEA Module stored in $module to the designated path.
+
+	.EXAMPLE
+		PS C:\> $module | Export-JeaModule -Path 'C:\temp' -AsBootstrap
+
+		Exports the JEA Module stored in $module to the designated path as a selfcontained installation-script.
 #>
 	[CmdletBinding()]
 	param (
@@ -41,15 +59,22 @@
 		$Module,
 		
 		[switch]
-		$Basic
+		$Basic,
+
+		[switch]
+		$NoConnectionCode,
+
+		[switch]
+		$AsBootstrap,
+
+		[switch]
+		$IncludeDependency
 	)
 	
-	begin
-	{
+	begin {
 		#region Utility Functions
-		function Write-Function
-		{
-		<#
+		function Write-Function {
+			<#
 			.SYNOPSIS
 				Creates a function file with UTF8Bom encoding.
 			
@@ -87,11 +112,10 @@ function {0}
 			[System.IO.File]::WriteAllText($Path, $functionString, $encoding)
 		}
 		
-		function Write-File
-		{
+		function Write-File {
 			[CmdletBinding()]
 			param (
-				[string]
+				[string[]]
 				$Text,
 				
 				[string]
@@ -99,37 +123,61 @@ function {0}
 			)
 			$encoding = New-Object System.Text.UTF8Encoding($true)
 			Write-PSFMessage -String 'Export-JeaModule.File.Create' -StringValues $Path -FunctionName Export-JeaModule
-			[System.IO.File]::WriteAllText($Path, $Text, $encoding)
+			[System.IO.File]::WriteAllText($Path, ($Text -join "`n"), $encoding)
 		}
 		#endregion Utility Functions
 		
-		# Will succeede, as the validation scriptblock checks this first
+		# Will succeed, as the validation scriptblock checks this first
 		$resolvedPath = Resolve-PSFPath -Path $Path -Provider FileSystem -SingleItem
 	}
-	process
-	{
-		foreach ($moduleObject in $Module)
-		{
+	process {
+		foreach ($moduleObject in $Module) {
 			$moduleName = $moduleObject.Name -replace '\s', '_'
 			if ($moduleName -notlike "JEA_*") { $moduleName = "JEA_{0}" -f $moduleName }
+
+			#region Bootstrap
+			if ($AsBootstrap) {
+				$tempRoot = New-PSFTempDirectory -Name bootstrap -ModuleName JEAnalyzer
+				$modulesPath = New-Item -Path $tempRoot -Name Modules -ItemType Directory -Force
+				Export-JeaModule -Module $moduleObject -Path $modulesPath.FullName -Basic:$Basic -NoConnectionCode
+				if ($IncludeDependency) {
+					$saveDefaults = @{
+						Repository = Get-PSFConfigValue -FullName 'JEAnalyzer.DefaultRepository'
+						Path = $modulesPath.FullName
+					}
+					foreach ($requiredModule in $moduleObject.RequiredModules) {
+						$call = @{ Name = $requiredModule }
+						if ($requiredModule.ModuleName) { $call.Name = $requiredModule.ModuleName }
+						if ($requiredModule.RequiredVersion) { $call.RequiredVersion = $requiredModule.RequiredVersion }
+						if ($requiredModule.ModuleVersion) {$call.MinimumVersion = $requiredModule.ModuleVersion }
+						Save-Module @saveDefaults @call
+					}
+				}
+				$runCode = [System.IO.File]::ReadAllText("$script:ModuleRoot\internal\resources\run.ps1")
+				$runCode = $runCode -replace '%name%', $moduleName
+				$runPath = Join-Path -Path $tempRoot -ChildPath run.ps1
+				$encoding = [System.Text.UTF8Encoding]::new($true)
+				[System.IO.File]::WriteAllText($runPath, $runCode, $encoding)
+				New-BootstrapScript -Path $tempRoot -OutPath (Join-Path -Path $Path -ChildPath "$moduleName.ps1")
+				Remove-PSFTempItem -Name bootstrap -ModuleName JEAnalyzer
+
+				continue
+			}
+			#endregion Bootstrap
 			
 			#region Create Module folder
-			if (Test-Path -Path (Join-Path $resolvedPath $moduleName))
-			{
+			if (Test-Path -Path (Join-Path $resolvedPath $moduleName)) {
 				$moduleBase = Get-Item -Path (Join-Path $resolvedPath $moduleName)
 				Write-PSFMessage -String 'Export-JeaModule.Folder.ModuleBaseExists' -StringValues $moduleBase.FullName
 			}
-			else
-			{
+			else {
 				$moduleBase = New-Item -Path $resolvedPath -Name $moduleName -ItemType Directory -Force
 				Write-PSFMessage -String 'Export-JeaModule.Folder.ModuleBaseNew' -StringValues $moduleBase.FullName
 			}
-			if ($Basic)
-			{
+			if ($Basic) {
 				$rootFolder = $moduleBase
 			}
-			else
-			{
+			else {
 				Write-PSFMessage -String 'Export-JeaModule.Folder.VersionRoot' -StringValues $moduleBase.FullName, $moduleObject.Version
 				$rootFolder = New-Item -Path $moduleBase.FullName -Name $moduleObject.Version -ItemType Directory -Force
 			}
@@ -142,8 +190,7 @@ function {0}
 				'internal\scriptsPost'
 				'internal\scriptsRole'
 			)
-			foreach ($folder in $folders)
-			{
+			foreach ($folder in $folders) {
 				Write-PSFMessage -String 'Export-JeaModule.Folder.Content' -StringValues $folder
 				$folderItem = New-Item -Path (Join-Path -Path $rootFolder.FullName -ChildPath $folder) -ItemType Directory -Force
 				'# <Placeholder>' | Set-Content -Path "$($folderItem.FullName)\readme.md"
@@ -153,25 +200,22 @@ function {0}
 			#region Create Role Capabilities
 			Write-PSFMessage -String 'Export-JeaModule.Folder.RoleCapailities' -StringValues $rootFolder.FullName
 			$roleCapabilityFolder = New-Item -Path $rootFolder.FullName -Name 'RoleCapabilities' -Force -ItemType Directory
-			foreach ($role in $moduleObject.Roles.Values)
-			{
+			foreach ($role in $moduleObject.Roles.Values) {
 				$RoleCapParams = @{
-					Path		   = ('{0}\{1}.psrc' -f $roleCapabilityFolder.FullName, $role.Name)
-					Author		   = $moduleObject.Author
-					CompanyName    = $moduleObject.Company
-					VisibleCmdlets = $role.VisibleCmdlets()
+					Path             = ('{0}\{1}.psrc' -f $roleCapabilityFolder.FullName, $role.Name)
+					Author           = $moduleObject.Author
+					CompanyName      = $moduleObject.Company
+					VisibleCmdlets   = $role.VisibleCmdlets()
 					VisibleFunctions = $role.VisibleFunctions($moduleName)
-					ModulesToImport = $moduleName
+					ModulesToImport  = $moduleName
 				}
 				Write-PSFMessage -String 'Export-JeaModule.Role.NewRole' -StringValues $role.Name, $role.CommandCapability.Count
 				New-PSRoleCapabilityFile @RoleCapParams
 				#region Logging Visible Commands
-				foreach ($cmdlet in $role.VisibleCmdlets())
-				{
+				foreach ($cmdlet in $role.VisibleCmdlets()) {
 					$commandName = $cmdlet.Name
 					$parameters = @()
-					foreach ($parameter in $cmdlet.Parameters)
-					{
+					foreach ($parameter in $cmdlet.Parameters) {
 						$string = $parameter.Name
 						if ($parameter.ValidateSet) { $string += (' | {0}' -f ($parameter.ValidateSet -join ",")) }
 						if ($parameter.ValidatePattern) { $string += (' | {0}' -f $parameter.ValidatePattern) }
@@ -181,12 +225,10 @@ function {0}
 					if (-not $parameters) { $parameterText = '' }
 					Write-PSFMessage -String 'Export-JeaModule.Role.VisibleCmdlet' -StringValues $role.Name, $commandName, $parameterText
 				}
-				foreach ($cmdlet in $role.VisibleFunctions($moduleName))
-				{
+				foreach ($cmdlet in $role.VisibleFunctions($moduleName)) {
 					$commandName = $cmdlet.Name
 					$parameters = @()
-					foreach ($parameter in $cmdlet.Parameters)
-					{
+					foreach ($parameter in $cmdlet.Parameters) {
 						$string = $parameter.Name
 						if ($parameter.ValidateSet) { $string += (' | {0}' -f ($parameter.ValidateSet -join ",")) }
 						if ($parameter.ValidatePattern) { $string += (' | {0}' -f $parameter.ValidatePattern) }
@@ -205,8 +247,7 @@ function {0}
 			
 			#region Create Private Functions
 			$privateFunctionPath = Join-Path -Path $rootFolder.FullName -ChildPath 'internal\functions'
-			foreach ($privateFunction in $moduleObject.PrivateFunctions.Values)
-			{
+			foreach ($privateFunction in $moduleObject.PrivateFunctions.Values) {
 				$outputPath = Join-Path -Path $privateFunctionPath -ChildPath "$($privateFunction.Name).ps1"
 				Write-Function -Function $privateFunction -Path $outputPath
 			}
@@ -214,21 +255,24 @@ function {0}
 			
 			#region Create Public Functions
 			$publicFunctionPath = Join-Path -Path $rootFolder.FullName -ChildPath 'functions'
-			foreach ($publicFunction in $moduleObject.PublicFunctions.Values)
-			{
+			foreach ($publicFunction in $moduleObject.PublicFunctions.Values) {
 				$outputPath = Join-Path -Path $publicFunctionPath -ChildPath "$($publicFunction.Name).ps1"
 				Write-Function -Function $publicFunction -Path $outputPath
 			}
 			#endregion Create Public Functions
 			
 			#region Create Scriptblocks
-			foreach ($scriptFile in $moduleObject.PreimportScripts.Values)
-			{
+			foreach ($scriptFile in $moduleObject.PreimportScripts.Values) {
 				Write-File -Text $scriptFile.Text -Path "$($rootFolder.FullName)\internal\scriptsPre\$($scriptFile.Name).ps1"
 			}
-			foreach ($scriptFile in $moduleObject.PostimportScripts.Values)
-			{
+			foreach ($scriptFile in $moduleObject.PostimportScripts.Values) {
 				Write-File -Text $scriptFile.Text -Path "$($rootFolder.FullName)\internal\scriptsPost\$($scriptFile.Name).ps1"
+			}
+			if ($moduleObject.ModulesToImport) {
+				$lines = foreach ($moduleToImport in $moduleObject.ModulesToImport) {
+					"Import-Module '{0}' -Scope Global -Force" -f $moduleToImport
+				}
+				Write-File -Text $lines -Path "$($rootFolder.FullName)\internal\scriptsPre\__ImportModules.ps1"
 			}
 			#endregion Create Scriptblocks
 			
@@ -246,38 +290,38 @@ function {0}
 			
 			# PSSession Configuration
 			$grouped = $moduleObject.Roles.Values | ForEach-Object {
-				foreach ($identity in $_.Identity)
-				{
+				foreach ($identity in $_.Identity) {
 					[pscustomobject]@{
 						Identity = $identity
-						Role = $_
+						Role     = $_
 					}
 				}
 			} | Group-Object Identity
 			$roleDefinitions = @{ }
-			foreach ($groupItem in $grouped)
-			{
-				if ($Basic)
-				{
+			foreach ($groupItem in $grouped) {
+				if ($Basic) {
 					$roleDefinitions[$groupItem.Name] = @{
 						RoleCapabilities = $groupItem.Group.Role.Name
 					}
 				}
-				else
-				{
-				$roleDefinitions[$groupItem.Name] = @{
+				else {
+					$roleDefinitions[$groupItem.Name] = @{
 						RoleCapabilityFiles = ($groupItem.Group.Role.Name | ForEach-Object { "C:\Program Files\WindowsPowerShell\Modules\{0}\{1}\RoleCapabilities\{2}.psrc" -f $moduleName, $Module.Version, $_ })
 					}
 				}
 			}
 			$paramNewPSSessionConfigurationFile = @{
-				SessionType = 'RestrictedRemoteServer'
-				Path	    = "$($rootFolder.FullName)\sessionconfiguration.pssc"
+				SessionType         = 'RestrictedRemoteServer'
+				Path                = "$($rootFolder.FullName)\sessionconfiguration.pssc"
 				RunAsVirtualAccount = $true
-				RoleDefinitions = $roleDefinitions
-				Author	    = $moduleObject.Author
-				Description = "[{0} {1}] {2}" -f $moduleName, $moduleObject.Version, $moduleObject.Description
-				CompanyName = $moduleObject.Company
+				RoleDefinitions     = $roleDefinitions
+				Author              = $moduleObject.Author
+				Description         = "[{0} {1}] {2}" -f $moduleName, $moduleObject.Version, $moduleObject.Description
+				CompanyName         = $moduleObject.Company
+			}
+			if ($moduleObject.ServiceAccount) {
+				$paramNewPSSessionConfigurationFile.Remove('RunAsVirtualAccount')
+				$paramNewPSSessionConfigurationFile.GroupManagedServiceAccount = $moduleObject.ServiceAccount
 			}
 			Write-PSFMessage -String 'Export-JeaModule.File.Create' -StringValues "$($rootFolder.FullName)\sessionconfiguration.pssc"
 			New-PSSessionConfigurationFile @paramNewPSSessionConfigurationFile
@@ -288,13 +332,13 @@ function {0}
 				CmdletsToExport   = @()
 				AliasesToExport   = @()
 				VariablesToExport = @()
-				Path			  = "$($rootFolder.FullName)\$($moduleName).psd1"
-				Author		      = $moduleObject.Author
-				Description	      = $moduleObject.Description
-				CompanyName	      = $moduleObject.Company
-				RootModule	      = "$($moduleName).psm1"
-				ModuleVersion	  = $moduleObject.Version
-				Tags			  = 'JEA', 'JEAnalyzer', 'JEA_Module'
+				Path              = "$($rootFolder.FullName)\$($moduleName).psd1"
+				Author            = $moduleObject.Author
+				Description       = $moduleObject.Description
+				CompanyName       = $moduleObject.Company
+				RootModule        = "$($moduleName).psm1"
+				ModuleVersion     = $moduleObject.Version
+				Tags              = 'JEA', 'JEAnalyzer', 'JEA_Module'
 			}
 			if ($moduleObject.RequiredModules) { $paramNewModuleManifest.RequiredModules = $moduleObject.RequiredModules }
 			Write-PSFMessage -String 'Export-JeaModule.File.Create' -StringValues "$($rootFolder.FullName)\$($moduleName).psd1"
@@ -302,9 +346,9 @@ function {0}
 			#endregion Create Common Resources
 			
 			#region Generate Connection Script
+			if ($NoConnectionCode) { continue }
 			$connectionSegments = @()
-			foreach ($role in $moduleObject.Roles.Values)
-			{
+			foreach ($role in $moduleObject.Roles.Values) {
 				$connectionSegments += @'
 # Connect to JEA Endpoint for Role {0}
 $session = New-PSSession -ComputerName '<InsertNameHere>' -ConfigurationName '{1}'

@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 1.3.17 (2023-06-18)
+
+- New: Get-JeaEndpoint - Retrieve JEA Endpoints and their capabilities from target computers.
+- New: Uninstall-JeaModule - Remove JEA Endpoints and - optionally - their backing code.
+- Upd: JEA Module - registering a JEA module now creates a scheduled task first to restore the WinRM service in case it fails its restart (as is its wont)
+- Upd: Export-JeaModule - able to export as selfcontained ps1 file.
+- Upd: New-JeaModule - added ModulesToImport parameter to import modules explicitly, without requiring them as a module dependency.
+- Fix: JEA Module - registering a new version fails without manually unregistering the previous JEA endpoint
+- Fix: New-JeaModule - using RequiredModules fails
+
 ## 1.2.10
 
 - New: Command Install-JeaModule - Installs a JEA module on the target computer

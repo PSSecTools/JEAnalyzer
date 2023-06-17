@@ -155,6 +155,21 @@
             The company the module is deployed by
             </summary>
         </member>
+        <member name="F:JEAnalyzer.Module.ServiceAccount">
+            <summary>
+            The gMSA to operate the JEA endpoint under
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.RequiredModules">
+            <summary>
+            Modules required for this module
+            </summary>
+        </member>
+        <member name="F:JEAnalyzer.Module.ModulesToImport">
+            <summary>
+            Modules that must be imported at load time, but should not be a required module.
+            </summary>
+        </member>
         <member name="F:JEAnalyzer.Module.Roles">
             <summary>
             The roles contained in the module

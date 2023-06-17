@@ -4,7 +4,7 @@
 	
 	# Version number of this module.
 
-	ModuleVersion = '1.2.10'
+	ModuleVersion = '1.3.17'
 	
 	# ID used to uniquely identify this module
 	GUID = '346caa76-534a-4651-88f5-359e85cd71c0'
@@ -27,7 +27,7 @@
 	# Modules that must be imported into the global environment prior to importing
 	# this module
 	RequiredModules = @(
-		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.4.150' }
+		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.8.289' }
 	)
 	
 	# Assemblies that must be loaded prior to importing this module
@@ -46,6 +46,7 @@
 		'ConvertTo-JeaCapability'
 		'Export-JeaModule'
 		'Export-JeaRoleCapFile'
+		'Get-JeaEndpoint'
 		'Import-JeaScriptFile'
 		'Install-JeaModule'
 		'New-JeaCommand'
