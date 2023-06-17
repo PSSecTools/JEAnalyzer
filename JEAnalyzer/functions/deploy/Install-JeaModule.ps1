@@ -66,7 +66,7 @@
 	{
 		foreach ($moduleObject in $Module)
 		{
-			if (-not (Test-PSFShouldProcess -ActionString 'Install-JeaModule.Install' -Target ($ComputerName -join ", "))) { continue }
+			if (-not (Test-PSFShouldProcess -ActionString 'Install-JeaModule.Install' -ActionStringValues $moduleObject.Name -Target ($ComputerName -join ", ") -PSCmdlet $PSCmdlet)) { continue }
 			
 			Write-PSFMessage -String 'Install-JeaModule.Exporting.Module' -StringValues $moduleObject.Name
 			Export-JeaModule -Path $workingDirectory.FullName -Module $moduleObject -Basic:$Basic

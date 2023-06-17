@@ -22,6 +22,10 @@
 		If left empty, only remote management users will be able to connect to this endpoint.
 		Either use AD Objects (such as the output of Get-ADGroup) or offer netbios-domain-qualified names as string.
 	
+	.PARAMETER ServiceAccount
+		The group Managed Service Account under which the JEA endpoint is being executed.
+		If this is not specified, the JEA endpoint will run under a virtual local admin account.
+
 	.PARAMETER Description
 		A description for the module to be created.
 	
@@ -54,7 +58,13 @@
 		Note: Specify this in the same manner you would in a module manifest.
 		Note2: Do not use this for modules you cannot publish in a repository if you want to distribute this JEA module in such.
 		For example, taking a dependency on the Active Directory module would be disadvised.
-		In this coses, instead import them as a PreImport-script.
+		In this cases, use the ModulesToImport instead.
+
+	.PARAMETER ModulesToImport
+		Any modules to also import when importing the JEA module.
+		For modules that are distributed via package management you should instead use the RequiredModules parameter.
+		For modules that are not - such as built-in windows modules - this is the place to put them.
+		In a JEA endpoint, automatic module import is disabled, all modules must either be a dependency or loaded explicitly.
 	
 	.EXAMPLE
 		PS C:\> New-JeaModule -Name 'JEA_ADUser' -Description 'Grants access to the Get-ADUser command'
@@ -70,6 +80,9 @@
 		
 		[string]
 		$Identity,
+
+		[string]
+		$ServiceAccount,
 		
 		[string]
 		$Description,
@@ -90,7 +103,10 @@
 		$PostImport,
 		
 		[object]
-		$RequiredModules
+		$RequiredModules,
+
+		[string[]]
+		$ModulesToImport
 	)
 	
 	process
@@ -104,7 +120,9 @@
 			Company	    = $Company
 		}
 		if ($Identity) { $module.Roles[$Name] = New-JeaRole -Name $Name -Identity $Identity }
+		if ($ServiceAccount) { $module.ServiceAccount = $ServiceAccount }
 		if ($RequiredModules) { $module.RequiredModules = $RequiredModules }
+		if ($ModulesToImport) { $module.ModulesToImport = $ModulesToImport }
 		foreach ($scriptFile in $PreImport) { $module.PreimportScripts[$scriptFile.Name] = $scriptFile }
 		foreach ($scriptFile in $PostImport) { $module.PostimportScripts[$scriptFile.Name] = $scriptFile }
 		

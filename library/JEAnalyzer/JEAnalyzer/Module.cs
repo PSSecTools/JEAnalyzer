@@ -36,9 +36,19 @@ namespace JEAnalyzer
         public string Company;
 
         /// <summary>
+        /// The gMSA to operate the JEA endpoint under
+        /// </summary>
+        public string ServiceAccount;
+
+        /// <summary>
         /// Modules required for this module
         /// </summary>
         public object RequiredModules;
+
+        /// <summary>
+        /// Modules that must be imported at load time, but should not be a required module.
+        /// </summary>
+        public string[] ModulesToImport;
 
         /// <summary>
         /// The roles contained in the module
