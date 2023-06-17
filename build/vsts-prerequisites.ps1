@@ -1,4 +1,4 @@
-﻿Install-Module Microsoft.PowerShell.PSResourceGet -Force
+﻿Install-Module Microsoft.PowerShell.PSResourceGet -Force -AllowPrerelease
 
 $modules = @(
 	'Pester'
