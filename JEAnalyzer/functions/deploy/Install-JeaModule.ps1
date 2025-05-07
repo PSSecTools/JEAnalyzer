@@ -78,7 +78,7 @@
 			if ($failedServers)
 			{
 				if ($EnableException) { Stop-PSFFunction -String 'Install-JeaModule.Connections.Failed' -StringValues ($failedServers.TargetObject -join ", ") -Target $failedServers.TargetObject -EnableException $EnableException }
-				foreach ($failure in $failedServers) { Write-PSFMessage -Level Warning -String 'Install-JeaModule.Connections.Failed' -StringValues $failure.TargetObject -ErrorRecord $_ -Target $failure.TargetObject }
+				foreach ($failure in $failedServers) { Write-PSFMessage -Level Warning -String 'Install-JeaModule.Connections.Failed' -StringValues $failure.TargetObject -ErrorRecord $failure -Target $failure.TargetObject }
 			}
 			if (-not $sessions)
 			{

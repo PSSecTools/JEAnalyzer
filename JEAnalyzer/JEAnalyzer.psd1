@@ -4,7 +4,7 @@
 	
 	# Version number of this module.
 
-	ModuleVersion = '1.3.17'
+	ModuleVersion = '1.3.19'
 	
 	# ID used to uniquely identify this module
 	GUID = '346caa76-534a-4651-88f5-359e85cd71c0'
@@ -27,7 +27,7 @@
 	# Modules that must be imported into the global environment prior to importing
 	# this module
 	RequiredModules = @(
-		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.8.289' }
+		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.12.346' }
 	)
 	
 	# Assemblies that must be loaded prior to importing this module
@@ -80,13 +80,13 @@
 		PSData = @{
 			
 			# Tags applied to this module. These help with module discovery in online galleries.
-			# Tags = @()
+			Tags = @('jea')
 			
 			# A URL to the license for this module.
-			# LicenseUri = ''
+			LicenseUri = 'https://github.com/PSSecTools/JEAnalyzer/blob/master/LICENSE'
 			
 			# A URL to the main website for this project.
-			# ProjectUri = ''
+			ProjectUri = 'https://github.com/PSSecTools/JEAnalyzer'
 			
 			# A URL to an icon representing this module.
 			# IconUri = ''

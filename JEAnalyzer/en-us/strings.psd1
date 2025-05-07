@@ -15,7 +15,8 @@
 	'Export-JeaModule.Role.VisibleCmdlet'      = '[Role: {0}] Adding visible Cmdlet: {1}{2}' # $role.Name, $commandName, $parameterText
 	'Export-JeaModule.Role.VisibleFunction'    = '[Role: {0}] Adding visible Function: {1}{2}' # $role.Name, $commandName, $parameterText
 	
-	'FileSystem.Directory.Fail'                = 'Not a directory: {0}' # <user input>, <validation item>
+	'Validate.FileSystem.Directory.Fail'       = 'Not a directory: {0}' # <user input>, <validation item>
+	'Validate.ServiceAccount'                  = 'Invalid account name: Must be a valid NTAccount name notation (<domain netbios name>\samaccountname)' # <user input>, <validation item>
 	
 	'General.BoundParameters'                  = 'Bound parameters: {0}' # ($PSBoundParameters.Keys -join ", ")
 	
