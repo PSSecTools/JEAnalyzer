@@ -1,5 +1,10 @@
 ﻿# Changelog
 
+## 1.3.19 (2025-05-07)
+
+- Upd: New-JeaModule - better service account validation and processing
+- Fix: Install-JeaModule - unexpected error when failing to connect to remote computer
+
 ## 1.3.17 (2023-06-18)
 
 - New: Get-JeaEndpoint - Retrieve JEA Endpoints and their capabilities from target computers.

@@ -81,6 +81,7 @@
 		[string]
 		$Identity,
 
+		[PsfValidateScript('JEAnalyzer.Validate.ServiceAccount', ErrorString = 'JEAnalyzer.Validate.ServiceAccount')]
 		[string]
 		$ServiceAccount,
 		
@@ -120,7 +121,7 @@
 			Company	    = $Company
 		}
 		if ($Identity) { $module.Roles[$Name] = New-JeaRole -Name $Name -Identity $Identity }
-		if ($ServiceAccount) { $module.ServiceAccount = $ServiceAccount }
+		if ($ServiceAccount) { $module.ServiceAccount = $ServiceAccount -replace '\$$' }
 		if ($RequiredModules) { $module.RequiredModules = $RequiredModules }
 		if ($ModulesToImport) { $module.ModulesToImport = $ModulesToImport }
 		foreach ($scriptFile in $PreImport) { $module.PreimportScripts[$scriptFile.Name] = $scriptFile }
