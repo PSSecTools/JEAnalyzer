@@ -13,7 +13,7 @@ $exceptions['LegalSurplus'] = @(
 )
 #>
 $exceptions['LegalSurplus'] = @(
-
+	'Validate.FileSystem.Directory.Fail'
 )
 
 $exceptions['NoTextNeeded'] = @(
